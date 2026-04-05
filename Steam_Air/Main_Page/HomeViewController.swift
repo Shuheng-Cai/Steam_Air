@@ -73,7 +73,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GameCell", for: indexPath) as! GameCell
             
             // Fill name
-            GameImageCache.loadImage(from: games[indexPath.row].iconURL ?? "", into: cell.gameImageView)
+            GameImageCache.loadImage(from: games[indexPath.row].iconURL, into: cell.gameImageView)
             
             cell.gameNameLabel.text = games[indexPath.row].name
             
@@ -83,7 +83,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         if collectionView == newsCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "NewsCell", for: indexPath) as! NewsCell
             
-            GameImageCache.loadImage(from: news[indexPath.row].iconURL ?? "", into: cell.newsImage)
+            GameImageCache.loadImage(from: news[indexPath.row].iconURL, into: cell.newsImage)
             cell.newsTitle.text = news[indexPath.row].title
             
             return cell

@@ -20,6 +20,9 @@
                     </tabBar>
                     <connections>
                         <segue destination="REa-6h-EcH" kind="relationship" relationship="viewControllers" id="YTg-nb-f9L"/>
+                        <segue destination="LIB-nc-v01" kind="relationship" relationship="viewControllers" id="LIB-tc-v01"/>
+                        <segue destination="STR-nc-v01" kind="relationship" relationship="viewControllers" id="STR-tc-v01"/>
+                        <segue destination="WSH-nc-v01" kind="relationship" relationship="viewControllers" id="WSH-tc-v01"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LS9-Rq-fad" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -230,7 +233,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="DETAIL" id="GIa-Ci-e9l">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" style="plain" id="f17-y3-zmX">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" id="f17-y3-zmX">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="zR7-kH-QMT">
                                 <rect key="frame" x="325.33333333333331" y="4.6666666666666687" width="47.666666666666686" height="34.666666666666664"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -249,35 +252,11 @@
             </objects>
             <point key="canvasLocation" x="3516.7938931297708" y="206.33802816901411"/>
         </scene>
-        <!--Game Detail Navigation Controller-->
-        <scene sceneID="Hny-tD-ZH3">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="6Zk-7B-Kra" userLabel="Game Detail Navigation Controller" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="7Dr-vz-GW6">
-                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <textAttributes key="titleTextAttributes">
-                            <fontDescription key="fontDescription" name="Impact" family="Impact" pointSize="20"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <fontDescription key="fontDescription" type="system" pointSize="9"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="XEW-Ke-9om" kind="relationship" relationship="rootViewController" id="wnt-gu-GuS"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="g1L-YF-C3o" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2590.0763358778627" y="206.33802816901411"/>
-        </scene>
         <!--Game Home Navigation Controller-->
         <scene sceneID="0sE-4Y-Eex">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="REa-6h-EcH" userLabel="Game Home Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="0Pu-FP-51q"/>
+                    <tabBarItem key="tabBarItem" title="Home" id="0Pu-FP-51q"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="bE8-ZJ-6Kr">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -291,6 +270,114 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xak-yT-lzQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="138.1679389312977" y="130.98591549295776"/>
+        </scene>
+        <!--Store Scene-->
+        <scene sceneID="STR-sc-v01">
+            <objects>
+                <viewController storyboardIdentifier="StorePage" id="STR-vc-v01" userLabel="Store Scene" customClass="StoreViewController" customModule="Steam_Air" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="STR-vw-v01">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <viewLayoutGuide key="safeArea" id="STR-sa-v01"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Store" id="STR-ni-v01"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="STR-fr-v01" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1064" y="900"/>
+        </scene>
+        <!--Store Navigation Controller-->
+        <scene sceneID="STR-sc-nv1">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="STR-nc-v01" userLabel="Store Navigation Controller" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Store" id="STR-ti-v01"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="STR-nb-v01">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="STR-vc-v01" kind="relationship" relationship="rootViewController" id="STR-sg-v01"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="STR-fr-nv1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="900"/>
+        </scene>
+        <!--Wishlist Scene-->
+        <scene sceneID="WSH-sc-v01">
+            <objects>
+                <viewController storyboardIdentifier="WishlistPage" id="WSH-vc-v01" userLabel="Wishlist Scene" customClass="WishlistViewController" customModule="Steam_Air" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="WSH-vw-v01">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <viewLayoutGuide key="safeArea" id="WSH-sa-v01"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Wishlist" id="WSH-ni-v01"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSH-fr-v01" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1064" y="1200"/>
+        </scene>
+        <!--Wishlist Navigation Controller-->
+        <scene sceneID="WSH-sc-nv1">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WSH-nc-v01" userLabel="Wishlist Navigation Controller" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Wishlist" id="WSH-ti-v01"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="WSH-nb-v01">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="WSH-vc-v01" kind="relationship" relationship="rootViewController" id="WSH-sg-v01"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="WSH-fr-nv1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="1200"/>
+        </scene>
+        <!--Library Scene-->
+        <scene sceneID="LIB-sc-v01">
+            <objects>
+                <viewController storyboardIdentifier="LibraryPage" id="LIB-vc-v01" userLabel="Library Scene" customClass="LibraryViewController" customModule="Steam_Air" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LIB-vw-v01">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <viewLayoutGuide key="safeArea" id="LIB-sa-v01"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Library" id="LIB-ni-v01"/>
+                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LIB-fr-v01" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1064" y="600"/>
+        </scene>
+        <!--Library Navigation Controller-->
+        <scene sceneID="LIB-sc-nv1">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LIB-nc-v01" userLabel="Library Navigation Controller" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Library" id="LIB-ti-v01"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="LIB-nb-v01">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="LIB-vc-v01" kind="relationship" relationship="rootViewController" id="LIB-sg-v01"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LIB-fr-nv1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="138" y="600"/>
         </scene>
     </scenes>
     <resources>

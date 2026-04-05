@@ -14,4 +14,5 @@ struct Game {
     let playtime_forever: Int
     let playtime_2weeks: Int
     var iconURL: String
+    let lastPlayedDate: Date?
 }

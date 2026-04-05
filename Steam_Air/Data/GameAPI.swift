@@ -27,6 +27,7 @@ struct GameDTO: Codable {
     let playtimeForever: Int
     let playtime2weeks: Int?
     let imgIconUrl: String?
+    let rtimeLastPlayed: Int?
 
     enum CodingKeys: String, CodingKey {
         case appid
@@ -34,19 +35,22 @@ struct GameDTO: Codable {
         case playtime2weeks = "playtime_2weeks"
         case playtimeForever = "playtime_forever"
         case imgIconUrl = "img_icon_url"
+        case rtimeLastPlayed = "rtime_last_played"
     }
 }
 
 extension GameDTO {
     func toGame() -> Game {
-        Game(
+        let lastPlayed = rtimeLastPlayed.flatMap {
+            $0 > 0 ? Date(timeIntervalSince1970: TimeInterval($0)) : nil
+        }
+        return Game(
             appid: appid,
             name: name ?? "Unknown Game",
             playtime_forever: playtimeForever,
             playtime_2weeks: playtime2weeks ?? 0,
-            iconURL: imgIconUrl.map { hash in
-                "https://cdn.cloudflare.steamstatic.com/steam/apps/\(appid)/library_600x900.jpg"
-            }!
+            iconURL: "https://cdn.cloudflare.steamstatic.com/steam/apps/\(appid)/library_600x900.jpg",
+            lastPlayedDate: lastPlayed
         )
     }
 }

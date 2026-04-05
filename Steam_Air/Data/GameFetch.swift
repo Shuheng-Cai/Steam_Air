@@ -21,22 +21,17 @@ class fetchGame{
         }
 
         URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data, error == nil else {
-                completion([])
-                return
-            }
-
-            do {
-                let decoded = try JSONDecoder().decode(OwnedGamesResponse.self, from: data)
-                
-                let games = decoded.response.games.map { $0.toGame() }
-                
-                DispatchQueue.main.async {
-                    completion(games)
+            DispatchQueue.main.async {
+                guard let data = data, error == nil else {
+                    completion([])
+                    return
                 }
-            } catch {
-                print("Decode error:", error)
-                DispatchQueue.main.async {
+                do {
+                    let decoded = try JSONDecoder().decode(OwnedGamesResponse.self, from: data)
+                    let games = decoded.response.games.map { $0.toGame() }
+                    completion(games)
+                } catch {
+                    print("Decode error:", error)
                     completion([])
                 }
             }

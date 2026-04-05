@@ -1,0 +1,31 @@
+//
+//  WishlistViewController.swift
+//  Steam_Air
+//
+//  Created by  Lucy K Y XU on 4/5/26.
+//
+
+import UIKit
+
+final class WishlistViewController: UIViewController {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        title = "Wishlist"
+        setupPlaceholder()
+    }
+
+    private func setupPlaceholder() {
+        let label = UILabel()
+        label.text = "Coming Soon"
+        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+        ])
+    }
+}

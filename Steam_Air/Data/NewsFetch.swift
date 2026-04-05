@@ -18,30 +18,26 @@ class fetchNews{
                 return
             }
             
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                
-                if let error = error {
-                    print("Error:", error)
-                    return
-                }
-                
-                guard let data = data else { return }
-                
-                do {
-                    let decoded = try JSONDecoder().decode(NewsResponse.self, from: data)
-                    
-                    let news = decoded.appnews.newsitems.map {
-                        $0.toNews(appid: appid)
+            URLSession.shared.dataTask(with: url) { data, _, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error:", error)
+                        completion([])
+                        return
                     }
-                    
-                    DispatchQueue.main.async {
+                    guard let data = data else {
+                        completion([])
+                        return
+                    }
+                    do {
+                        let decoded = try JSONDecoder().decode(NewsResponse.self, from: data)
+                        let news = decoded.appnews.newsitems.map { $0.toNews(appid: appid) }
                         completion(news)
+                    } catch {
+                        print("Decode error:", error)
+                        completion([])
                     }
-                    
-                } catch {
-                    print("Decode error:", error)
                 }
-                
             }.resume()
         }
 }
