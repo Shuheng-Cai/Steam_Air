@@ -42,4 +42,17 @@ class fetchGame{
             }
         }.resume()
     }
+    
+    func loadImage(from urlString: String, into imageView: UIImageView) {
+        guard let url = URL(string: urlString) else { return }
+
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            guard let data = data,
+                  let image = UIImage(data: data) else { return }
+
+            DispatchQueue.main.async {
+                imageView.image = image
+            }
+        }.resume()
+    }
 }
