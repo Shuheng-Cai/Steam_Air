@@ -22,6 +22,8 @@ final class PriceHistoryViewController: UIViewController {
         case all        = "All"
     }
 
+    // MARK: - Views
+
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -99,13 +101,14 @@ final class PriceHistoryViewController: UIViewController {
 
     private lazy var addToWishlistButton: UIButton = {
         var config = UIButton.Configuration.tinted()
-        config.title = "Add to Wishlist"
         config.cornerStyle = .large
-        config.baseForegroundColor = .systemBlue
         let btn = UIButton(configuration: config)
+        btn.addTarget(self, action: #selector(addToWishlistTapped), for: .touchUpInside)
         btn.translatesAutoresizingMaskIntoConstraints = false
         return btn
     }()
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,7 +118,10 @@ final class PriceHistoryViewController: UIViewController {
         setupTimeRangePills()
         setupLayout()
         loadData()
+        updateAddToWishlistButton()
     }
+
+    // MARK: - Setup
 
     private func setupNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -159,9 +165,8 @@ final class PriceHistoryViewController: UIViewController {
         contentStack.addArrangedSubview(timeRangeStack)
         contentStack.addArrangedSubview(statsStack)
         contentStack.addArrangedSubview(chartView)
-        chartView.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        chartView.heightAnchor.constraint(equalToConstant: 220).isActive = true
 
-        // Recommendation card internal layout
         recommendationCard.addSubview(recommendationTitle)
         recommendationCard.addSubview(recommendationSubtitle)
         NSLayoutConstraint.activate([
@@ -181,22 +186,40 @@ final class PriceHistoryViewController: UIViewController {
         addToWishlistButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
 
+    // MARK: - Data
+
     private func loadData() {
         guard let item = wishlistItem else { return }
         priceHistory = GamePriceHistory.mock(for: item)
-        buildStatsCards()
-        updateChart()
+        updateDisplayForCurrentRange()
         updateRecommendationCard()
     }
 
-    private func buildStatsCards() {
+    /// Single entry point that refreshes both the chart AND the stats cards
+    /// for whichever time range is currently selected.
+    private func updateDisplayForCurrentRange() {
         guard let history = priceHistory else { return }
+        let points = filteredPoints(history.history)
+        chartView.dataPoints = points
+        buildStatsCards(from: points)
+    }
+
+    // MARK: - Stats cards
+
+    /// Builds the Low / High / Average cards from the currently visible data points.
+    private func buildStatsCards(from points: [PricePoint]) {
         statsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        guard !points.isEmpty else { return }
+
+        let prices = points.map { $0.price }
+        let low  = prices.min() ?? 0
+        let high = prices.max() ?? 0
+        let avg  = prices.reduce(0, +) / Double(prices.count)
 
         let stats: [(String, String)] = [
-            ("All-Time\nLow",  String(format: "$%.2f", history.allTimeLow)),
-            ("All-Time\nHigh", String(format: "$%.2f", history.allTimeHigh)),
-            ("Average",        String(format: "$%.2f", history.averagePrice)),
+            ("Low",  String(format: "$%.2f", low)),
+            ("High", String(format: "$%.2f", high)),
+            ("Avg",  String(format: "$%.2f", avg)),
         ]
         for (title, value) in stats {
             statsStack.addArrangedSubview(makeStatCard(title: title, value: value))
@@ -212,7 +235,6 @@ final class PriceHistoryViewController: UIViewController {
         titleLabel.text = title
         titleLabel.font = .systemFont(ofSize: 11)
         titleLabel.textColor = .secondaryLabel
-        titleLabel.numberOfLines = 2
         titleLabel.textAlignment = .center
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
@@ -220,6 +242,8 @@ final class PriceHistoryViewController: UIViewController {
         valueLabel.text = value
         valueLabel.font = .systemFont(ofSize: 16, weight: .bold)
         valueLabel.textAlignment = .center
+        valueLabel.adjustsFontSizeToFitWidth = true
+        valueLabel.minimumScaleFactor = 0.7
         valueLabel.translatesAutoresizingMaskIntoConstraints = false
 
         card.addSubview(titleLabel)
@@ -236,10 +260,7 @@ final class PriceHistoryViewController: UIViewController {
         return card
     }
 
-    private func updateChart() {
-        guard let history = priceHistory else { return }
-        chartView.dataPoints = filteredPoints(history.history)
-    }
+    // MARK: - Helpers
 
     private func filteredPoints(_ points: [PricePoint]) -> [PricePoint] {
         let now = Date()
@@ -273,16 +294,68 @@ final class PriceHistoryViewController: UIViewController {
         }
     }
 
+    private func updateAddToWishlistButton() {
+        guard let appid = wishlistItem?.appid else { return }
+        let inWishlist = LocalWishlistManager.shared.contains(appid)
+        var config = addToWishlistButton.configuration ?? UIButton.Configuration.tinted()
+        if inWishlist {
+            config.title = "In Wishlist"
+            config.image = UIImage(systemName: "checkmark")
+            config.baseForegroundColor = .systemGreen
+            config.baseBackgroundColor = .systemGreen
+        } else {
+            config.title = "Add to Wishlist"
+            config.image = nil
+            config.baseForegroundColor = .systemBlue
+            config.baseBackgroundColor = .systemBlue
+        }
+        addToWishlistButton.configuration = config
+    }
+
+    // MARK: - Actions
+
     @objc private func rangeButtonTapped(_ sender: UIButton) {
         let index = sender.tag
         currentRange = TimeRange.allCases[index]
+
         for (i, btn) in rangeButtons.enumerated() {
             var config = btn.configuration ?? UIButton.Configuration.filled()
             config.baseForegroundColor = i == index ? .white : .label
             config.baseBackgroundColor = i == index ? .systemBlue : .secondarySystemBackground
             btn.configuration = config
         }
-        updateChart()
+        // Refresh both chart and stats for the new range
+        updateDisplayForCurrentRange()
+    }
+
+    @objc private func addToWishlistTapped() {
+        guard let item = wishlistItem else { return }
+
+        if LocalWishlistManager.shared.contains(item.appid) {
+            // Already in wishlist — show notification
+            let alert = UIAlertController(
+                title: "Already in Wishlist",
+                message: "\"\(item.name)\" is already in your wishlist.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        } else {
+            // Add as a local wishlist item
+            let game = Game(
+                appid: item.appid,
+                name: item.name,
+                playtime_forever: 0,
+                playtime_2weeks: 0,
+                iconURL: item.iconURL,
+                lastPlayedDate: nil
+            )
+            LocalWishlistManager.shared.add(game: game)
+            updateAddToWishlistButton()
+
+            // Sync to Steam if already authenticated
+            SteamAuthManager.shared.addToSteamWishlist(appid: item.appid) { _ in }
+        }
     }
 
     @objc private func buyNowTapped() {

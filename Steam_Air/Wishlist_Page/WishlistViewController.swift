@@ -12,10 +12,29 @@ final class WishlistViewController: UIViewController {
     private enum Tab: Int { case wishlist = 0, deals = 1 }
 
     private var currentTab: Tab = .wishlist
-    private var wishlistItems: [WishlistItem] = []
+    private var steamWishlistItems: [WishlistItem] = []   // from Steam API
     private var deals: [SteamDeal] = []
     private var isLoadingWishlist = false
     private var isLoadingDeals = false
+
+    /// Merged list: Steam wishlist + locally-added games (deduplicated by appid)
+    private var wishlistItems: [WishlistItem] {
+        let steamIDs = Set(steamWishlistItems.map { $0.appid })
+        let localItems = LocalWishlistManager.shared.localGames()
+            .filter { !steamIDs.contains($0.appid) }
+            .map { WishlistItem(
+                appid: $0.appid,
+                name: $0.name,
+                iconURL: $0.iconURL,
+                currentPrice: nil,
+                originalPrice: nil,
+                discountPercent: 0,
+                isFreeGame: false,
+                addedDate: nil,
+                priority: Int.max
+            )}
+        return steamWishlistItems + localItems
+    }
 
     private let segmentControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Wishlist", "Deals"])
@@ -64,6 +83,16 @@ final class WishlistViewController: UIViewController {
         segmentControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         fetchWishlist()
         fetchDeals()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(localWishlistChanged),
+            name: .localWishlistChanged,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     private func setupNavigationBar() {
@@ -121,7 +150,7 @@ final class WishlistViewController: UIViewController {
         WishlistFetch().fetchWishlist(steamID: "76561198803168956") { [weak self] items in
             guard let self else { return }
             self.isLoadingWishlist = false
-            self.wishlistItems = items
+            self.steamWishlistItems = items
             if self.currentTab == .wishlist {
                 self.spinner.stopAnimating()
                 self.tableView.reloadData()
@@ -148,11 +177,18 @@ final class WishlistViewController: UIViewController {
         let isEmpty = currentTab == .wishlist ? wishlistItems.isEmpty : deals.isEmpty
         if isEmpty {
             emptyLabel.text = currentTab == .wishlist
-                ? "Your wishlist is empty.\nMake sure your Steam wishlist is set to Public."
+                ? "Your wishlist is empty.\nAdd games from the Library, or make your Steam wishlist Public."
                 : "No deals available right now."
         }
         emptyLabel.isHidden = !isEmpty
         tableView.isHidden = isEmpty
+    }
+
+    @objc private func localWishlistChanged() {
+        if currentTab == .wishlist {
+            tableView.reloadData()
+            updateEmptyState()
+        }
     }
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
@@ -178,22 +214,78 @@ final class WishlistViewController: UIViewController {
 
     @objc private func moreTapped() {
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: "Sort by Priority", style: .default) { [weak self] _ in
-            self?.wishlistItems.sort { $0.priority < $1.priority }
-            self?.tableView.reloadData()
-        })
-        sheet.addAction(UIAlertAction(title: "Sort by Discount", style: .default) { [weak self] _ in
-            self?.wishlistItems.sort { $0.discountPercent > $1.discountPercent }
-            self?.tableView.reloadData()
-        })
-        sheet.addAction(UIAlertAction(title: "Sort by Price", style: .default) { [weak self] _ in
-            self?.wishlistItems.sort {
-                ($0.currentPrice ?? .infinity) < ($1.currentPrice ?? .infinity)
+
+        // Sort actions (wishlist tab only)
+        if currentTab == .wishlist {
+            sheet.addAction(UIAlertAction(title: "Sort by Priority", style: .default) { [weak self] _ in
+                self?.steamWishlistItems.sort { $0.priority < $1.priority }
+                self?.tableView.reloadData()
+            })
+            sheet.addAction(UIAlertAction(title: "Sort by Discount", style: .default) { [weak self] _ in
+                self?.steamWishlistItems.sort { $0.discountPercent > $1.discountPercent }
+                self?.tableView.reloadData()
+            })
+            sheet.addAction(UIAlertAction(title: "Sort by Price", style: .default) { [weak self] _ in
+                self?.steamWishlistItems.sort {
+                    ($0.currentPrice ?? .infinity) < ($1.currentPrice ?? .infinity)
+                }
+                self?.tableView.reloadData()
+            })
+
+            // Steam sync
+            let syncTitle = SteamAuthManager.shared.isAuthenticated
+                ? "Sync to Steam Wishlist"
+                : "Sign in & Sync to Steam"
+            sheet.addAction(UIAlertAction(title: syncTitle, style: .default) { [weak self] _ in
+                self?.handleSyncToSteam()
+            })
+
+            // Sign out (only if logged in)
+            if SteamAuthManager.shared.isAuthenticated {
+                sheet.addAction(UIAlertAction(title: "Sign Out of Steam", style: .destructive) { _ in
+                    SteamAuthManager.shared.logOut()
+                })
             }
-            self?.tableView.reloadData()
-        })
+        }
+
         sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(sheet, animated: true)
+    }
+
+    private func handleSyncToSteam() {
+        if SteamAuthManager.shared.isAuthenticated {
+            performSync()
+        } else {
+            let loginVC = SteamLoginViewController()
+            loginVC.onAuthenticated = { [weak self] in
+                self?.performSync()
+            }
+            let nav = UINavigationController(rootViewController: loginVC)
+            present(nav, animated: true)
+        }
+    }
+
+    private func performSync() {
+        let hud = UIAlertController(title: "Syncing…", message: nil, preferredStyle: .alert)
+        present(hud, animated: true)
+
+        SteamAuthManager.shared.syncLocalWishlistToSteam { [weak self] synced, failed in
+            hud.dismiss(animated: true) {
+                guard let self else { return }
+                let msg: String
+                if synced == 0 && failed == 0 {
+                    msg = "Your wishlist is already up to date on Steam."
+                } else if failed == 0 {
+                    msg = "\(synced) game\(synced == 1 ? "" : "s") synced to your Steam wishlist."
+                } else {
+                    msg = "\(synced) synced, \(failed) failed. Check your Steam session."
+                }
+                let result = UIAlertController(title: "Sync Complete", message: msg,
+                                               preferredStyle: .alert)
+                result.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(result, animated: true)
+            }
+        }
     }
 }
 

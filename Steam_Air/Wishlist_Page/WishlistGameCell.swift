@@ -10,6 +10,10 @@ import UIKit
 final class WishlistGameCell: UITableViewCell {
     static let reuseID = "WishlistGameCell"
 
+    // Fixed 2:3 portrait cover — same ratio as library_600x900.jpg
+    private static let coverWidth: CGFloat  = 60
+    private static let coverHeight: CGFloat = 90   // 60 × 1.5
+
     private let coverImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -71,23 +75,32 @@ final class WishlistGameCell: UITableViewCell {
         contentView.addSubview(originalPriceLabel)
         contentView.addSubview(discountBadge)
 
-        NSLayoutConstraint.activate([
-            coverImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
-            coverImageView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10),
-            coverImageView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10),
-            coverImageView.widthAnchor.constraint(equalToConstant: 46),
+        let vPad: CGFloat = 10
 
+        NSLayoutConstraint.activate([
+            // Cover: fixed size anchored to leading + vertically centred
+            coverImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
+            coverImageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            coverImageView.widthAnchor.constraint(equalToConstant: Self.coverWidth),
+            coverImageView.heightAnchor.constraint(equalToConstant: Self.coverHeight),
+
+            // Cell must be tall enough to fit the cover
+            contentView.heightAnchor.constraint(greaterThanOrEqualToConstant: Self.coverHeight + vPad * 2),
+
+            // Discount badge — right edge, vertically centred
             discountBadge.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -40),
             discountBadge.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             discountBadge.widthAnchor.constraint(greaterThanOrEqualToConstant: 44),
             discountBadge.heightAnchor.constraint(equalToConstant: 22),
 
+            // Name label — top-aligned next to cover
             nameLabel.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: 12),
-            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            nameLabel.topAnchor.constraint(equalTo: coverImageView.topAnchor),
             nameLabel.trailingAnchor.constraint(equalTo: discountBadge.leadingAnchor, constant: -8),
 
+            // Price label — bottom-aligned next to cover
             priceLabel.leadingAnchor.constraint(equalTo: coverImageView.trailingAnchor, constant: 12),
-            priceLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -12),
+            priceLabel.bottomAnchor.constraint(equalTo: coverImageView.bottomAnchor),
 
             originalPriceLabel.leadingAnchor.constraint(equalTo: priceLabel.trailingAnchor, constant: 6),
             originalPriceLabel.centerYAnchor.constraint(equalTo: priceLabel.centerYAnchor),
