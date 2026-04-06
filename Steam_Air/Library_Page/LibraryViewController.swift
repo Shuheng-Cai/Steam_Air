@@ -2,12 +2,18 @@
 //  LibraryViewController.swift
 //  Steam_Air
 //
-//  Created by  Lucy K Y XU on 4/5/26.
+//  Created by Lucy K Y XU on 4/5/26.
 //
 
 import UIKit
 
 final class LibraryViewController: UIViewController {
+
+    // MARK: - Achievement load state (Collections tab)
+    private enum AchievementLoadState {
+        case idle, loading, loaded(GameAchievements?)
+    }
+    private var achievementsStates: [Int: AchievementLoadState] = [:]
 
     private var allGames: [Game] = []
     private var searchText = ""
@@ -62,6 +68,18 @@ final class LibraryViewController: UIViewController {
         return s
     }()
 
+    private lazy var collectionsTableView: UITableView = {
+        let tv = UITableView(frame: .zero, style: .plain)
+        tv.backgroundColor = .systemBackground
+        tv.keyboardDismissMode = .onDrag
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 84
+        tv.register(CollectionsGameCell.self, forCellReuseIdentifier: CollectionsGameCell.reuseID)
+        tv.isHidden = true
+        tv.translatesAutoresizingMaskIntoConstraints = false
+        return tv
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -69,7 +87,10 @@ final class LibraryViewController: UIViewController {
         setupLayout()
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionsTableView.dataSource = self
+        collectionsTableView.delegate = self
         searchBar.delegate = self
+        segmentControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         fetchGames()
     }
 
@@ -90,6 +111,7 @@ final class LibraryViewController: UIViewController {
         view.addSubview(segmentControl)
         view.addSubview(gameCountLabel)
         view.addSubview(collectionView)
+        view.addSubview(collectionsTableView)
         view.addSubview(spinner)
 
         NSLayoutConstraint.activate([
@@ -104,14 +126,28 @@ final class LibraryViewController: UIViewController {
             gameCountLabel.topAnchor.constraint(equalTo: segmentControl.bottomAnchor, constant: 12),
             gameCountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
 
+            // Library grid and Collections list share the same frame; toggled via isHidden
             collectionView.topAnchor.constraint(equalTo: gameCountLabel.bottomAnchor, constant: 4),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 
+            collectionsTableView.topAnchor.constraint(equalTo: gameCountLabel.bottomAnchor, constant: 4),
+            collectionsTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionsTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionsTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
             spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor),
         ])
+    }
+
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        let isLibrary = sender.selectedSegmentIndex == 0
+        collectionView.isHidden = !isLibrary
+        collectionsTableView.isHidden = isLibrary
+        updateGameCount()
+        if !isLibrary { collectionsTableView.reloadData() }
     }
 
     private func fetchGames() {
@@ -203,12 +239,65 @@ extension LibraryViewController: UISearchBarDelegate {
         self.searchText = searchText
         updateGameCount()
         collectionView.reloadData()
+        collectionsTableView.reloadData()
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
 }
+
+// MARK: - UITableViewDataSource (Collections tab)
+
+extension LibraryViewController: UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        displayedGames.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(
+            withIdentifier: CollectionsGameCell.reuseID, for: indexPath
+        ) as! CollectionsGameCell
+
+        let game = displayedGames[indexPath.row]
+
+        switch achievementsStates[game.appid] ?? .idle {
+        case .idle:
+            // First time this cell appears — kick off the fetch
+            achievementsStates[game.appid] = .loading
+            cell.configure(game: game, achievements: nil, isLoading: true)
+            AchievementFetch().fetchAchievements(appid: game.appid) { [weak self] result in
+                guard let self else { return }
+                self.achievementsStates[game.appid] = .loaded(result)
+                // Reload only this row to avoid full-table flicker
+                if let row = self.displayedGames.firstIndex(where: { $0.appid == game.appid }) {
+                    self.collectionsTableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+                }
+            }
+        case .loading:
+            cell.configure(game: game, achievements: nil, isLoading: true)
+        case .loaded(let achievements):
+            cell.configure(game: game, achievements: achievements, isLoading: false)
+        }
+        return cell
+    }
+}
+
+// MARK: - UITableViewDelegate (Collections tab)
+
+extension LibraryViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let game = displayedGames[indexPath.row]
+        let achievementsVC = GameAchievementsViewController()
+        achievementsVC.game = game
+        navigationController?.pushViewController(achievementsVC, animated: true)
+    }
+}
+
+// MARK: - Sort helper
 
 private extension Array where Element == Game {
     // Most-recently played first; ties broken by total playtime, then name.

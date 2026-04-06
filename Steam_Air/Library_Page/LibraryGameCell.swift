@@ -2,7 +2,7 @@
 //  LibraryGameCell.swift
 //  Steam_Air
 //
-//  Created by  Lucy K Y XU on 4/5/26.
+//  Created by Lucy K Y XU on 4/5/26.
 //
 
 import UIKit
