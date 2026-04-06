@@ -1,0 +1,13 @@
+# Claude Code internal files
+.claude/
+
+# Claude memory file (local only)
+CLAUDE.md
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Xcode user-specific files
+xcuserdata/
+*.xcuserstate

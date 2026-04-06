@@ -9,8 +9,10 @@ import Foundation
 
 
 struct Game {
-    let id: Int
+    let appid: Int
     let name: String
-    let playtimeHours: Double
-    let iconURL: URL?
+    let playtime_forever: Int
+    let playtime_2weeks: Int
+    var iconURL: String
+    let lastPlayedDate: Date?
 }
