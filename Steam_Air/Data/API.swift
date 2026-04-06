@@ -12,8 +12,8 @@ struct OwnedGamesResponse: Codable {
 }
 
 struct OwnedGamesData: Codable {
-    let gameCount: Int
-    let games: [GameDTO]
+    let gameCount: Int?
+    let games: [GameDTO]?
 
     enum CodingKeys: String, CodingKey {
         case gameCount = "game_count"

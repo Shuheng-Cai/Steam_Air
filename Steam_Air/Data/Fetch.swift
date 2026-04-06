@@ -5,37 +5,39 @@
 //  Created by  csh's computer on 3/25/26.
 //
 
-import UIKit
+import Foundation
 
-class fetchGame{
+class FetchGame {
     
-    var games: [Game] = []
-    
-    func fetchOwnedGames(apiKey: String, steamID: String, completion: @escaping ([Game]) -> Void) {
-        
-        let urlString = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=\(apiKey)&steamid=\(steamID)&include_appinfo=true&format=json"
-        
-        guard let url = URL(string: urlString) else {
+    func fetchOwnedGames(steamID: String, completion: @escaping ([Game]) -> Void) {
+        guard let url = URL(string: "http://10.232.214.33:5050/owned-games?steamid=\(steamID)") else {
+            print("Invalid URL")
             completion([])
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, _, error in
             guard let data = data, error == nil else {
-                completion([])
+                print("Request error:", error ?? "")
+                DispatchQueue.main.async {
+                    completion([])
+                }
                 return
             }
-
+            
             do {
                 let decoded = try JSONDecoder().decode(OwnedGamesResponse.self, from: data)
-                
-                let games = decoded.response.games.map { $0.toGame() }
+                let games = (decoded.response.games ?? []).map { $0.toGame() }
                 
                 DispatchQueue.main.async {
                     completion(games)
                 }
             } catch {
                 print("Decode error:", error)
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("Returned JSON:")
+                    print(jsonString)
+                }
                 DispatchQueue.main.async {
                     completion([])
                 }
