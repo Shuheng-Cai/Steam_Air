@@ -120,6 +120,9 @@
                                     <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18"/>
                                     <color key="baseForegroundColor" red="0.16692630788679536" green="0.3896153090049459" blue="0.80603708372902627" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="continueWithSteamTapped:" destination="ksz-kP-0Hc" eventType="touchUpInside" id="OSd-g9-rpm"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="or" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n8k-r4-bO5">
                                 <rect key="frame" x="193" y="611" width="17" height="22"/>
