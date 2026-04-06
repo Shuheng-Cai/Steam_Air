@@ -199,6 +199,9 @@
                                                         <buttonConfiguration key="configuration" style="filled" title="View On Steam">
                                                             <fontDescription key="titleFontDescription" name="Impact" family="Impact" pointSize="19"/>
                                                         </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="viewOnSteamTapped:" destination="XEW-Ke-9om" eventType="touchUpInside" id="WLA-tp-002"/>
+                                                        </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TPK-9I-nvP">
                                                         <rect key="frame" x="0.0" y="66" width="361" height="50"/>
@@ -209,6 +212,9 @@
                                                         <buttonConfiguration key="configuration" style="tinted" title="Add to Wishlist">
                                                             <fontDescription key="titleFontDescription" name="Impact" family="Impact" pointSize="19"/>
                                                         </buttonConfiguration>
+                                                        <connections>
+                                                            <action selector="wishlistButtonTapped:" destination="XEW-Ke-9om" eventType="touchUpInside" id="WLA-tp-001"/>
+                                                        </connections>
                                                     </button>
                                                 </subviews>
                                             </stackView>
@@ -246,6 +252,7 @@
                         <outlet property="GamePlayTime" destination="GH6-rs-cwU" id="i5M-wL-LX4"/>
                         <outlet property="GamePosterImage" destination="QgN-Zk-tiV" id="sQo-gw-J67"/>
                         <outlet property="GameTitle" destination="jsL-fg-ybJ" id="RMl-2u-0k1"/>
+                        <outlet property="wishlistButton" destination="TPK-9I-nvP" id="WLB-tp-001"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Om9-sq-sbw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
