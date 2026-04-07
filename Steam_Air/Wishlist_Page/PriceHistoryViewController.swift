@@ -22,8 +22,6 @@ final class PriceHistoryViewController: UIViewController {
         case all        = "All"
     }
 
-    // MARK: - Views
-
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -108,8 +106,6 @@ final class PriceHistoryViewController: UIViewController {
         return btn
     }()
 
-    // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -120,8 +116,6 @@ final class PriceHistoryViewController: UIViewController {
         loadData()
         updateAddToWishlistButton()
     }
-
-    // MARK: - Setup
 
     private func setupNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -186,7 +180,6 @@ final class PriceHistoryViewController: UIViewController {
         addToWishlistButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
 
-    // MARK: - Data
 
     private func loadData() {
         guard let item = wishlistItem else { return }
@@ -195,8 +188,6 @@ final class PriceHistoryViewController: UIViewController {
         updateRecommendationCard()
     }
 
-    /// Single entry point that refreshes both the chart AND the stats cards
-    /// for whichever time range is currently selected.
     private func updateDisplayForCurrentRange() {
         guard let history = priceHistory else { return }
         let points = filteredPoints(history.history)
@@ -204,9 +195,6 @@ final class PriceHistoryViewController: UIViewController {
         buildStatsCards(from: points)
     }
 
-    // MARK: - Stats cards
-
-    /// Builds the Low / High / Average cards from the currently visible data points.
     private func buildStatsCards(from points: [PricePoint]) {
         statsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         guard !points.isEmpty else { return }
@@ -260,8 +248,6 @@ final class PriceHistoryViewController: UIViewController {
         return card
     }
 
-    // MARK: - Helpers
-
     private func filteredPoints(_ points: [PricePoint]) -> [PricePoint] {
         let now = Date()
         let cal = Calendar.current
@@ -311,8 +297,6 @@ final class PriceHistoryViewController: UIViewController {
         }
         addToWishlistButton.configuration = config
     }
-
-    // MARK: - Actions
 
     @objc private func rangeButtonTapped(_ sender: UIButton) {
         let index = sender.tag
