@@ -268,12 +268,17 @@ extension LibraryViewController: UITableViewDataSource {
 
         let game = displayedGames[indexPath.row]
 
+        guard let steamID = steamID else {
+            cell.configure(game: game, achievements: nil, isLoading: false)
+            return cell
+        }
+
         switch achievementsStates[game.appid] ?? .idle {
         case .idle:
             // First time this cell appears — kick off the fetch
             achievementsStates[game.appid] = .loading
             cell.configure(game: game, achievements: nil, isLoading: true)
-            AchievementFetch().fetchAchievements(appid: game.appid) { [weak self] result in
+            AchievementFetch().fetchAchievements(appid: game.appid, steamID: steamID) { [weak self] result in
                 guard let self else { return }
                 self.achievementsStates[game.appid] = .loaded(result)
                 // Reload only this row to avoid full-table flicker
@@ -299,6 +304,7 @@ extension LibraryViewController: UITableViewDelegate {
         let game = displayedGames[indexPath.row]
         let achievementsVC = GameAchievementsViewController()
         achievementsVC.game = game
+        achievementsVC.steamID = steamID
         navigationController?.pushViewController(achievementsVC, animated: true)
     }
 }

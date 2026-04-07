@@ -12,6 +12,7 @@ final class GameAchievementsViewController: UIViewController {
 
     // Set by the caller before push
     var game: Game?
+    var steamID: String?
 
     private var unlocked: [Achievement] = []
     private var locked:   [Achievement] = []
@@ -71,11 +72,11 @@ final class GameAchievementsViewController: UIViewController {
     }
 
     private func fetchAchievements() {
-        guard let game else { return }
+        guard let game, let steamID = steamID else { return }
         spinner.startAnimating()
         tableView.isHidden = true
 
-        AchievementFetch().fetchAchievements(appid: game.appid) { [weak self] result in
+        AchievementFetch().fetchAchievements(appid: game.appid, steamID: steamID) { [weak self] result in
             guard let self else { return }
             self.spinner.stopAnimating()
 

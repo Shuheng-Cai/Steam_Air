@@ -9,23 +9,32 @@
 import Foundation
 
 class AchievementFetch {
-
-    private static let apiKey  = "CD89B4D216CF0A68E8970744826761AF"
-    private static let steamID = "76561198803168936"
+    private static var apiKey: String? {
+        Bundle.main.object(forInfoDictionaryKey: "SteamWebAPIKey") as? String
+    }
 
     /// Fetches achievements for `appid`. Returns nil if the game has no stats or on error.
-    func fetchAchievements(appid: Int, completion: @escaping (GameAchievements?) -> Void) {
+    func fetchAchievements(appid: Int, steamID: String, completion: @escaping (GameAchievements?) -> Void) {
+        guard let apiKey = Self.apiKey, !apiKey.isEmpty else {
+            print("AchievementFetch missing SteamWebAPIKey in Info.plist")
+            completion(nil)
+            return
+        }
+
         let urlString = "https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v0001/"
-            + "?appid=\(appid)&key=\(Self.apiKey)&steamid=\(Self.steamID)&l=en"
+            + "?appid=\(appid)&key=\(apiKey)&steamid=\(steamID)&l=en"
 
         guard let url = URL(string: urlString) else {
             completion(nil)
             return
         }
 
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        URLSession.shared.dataTask(with: url) { data, response, error in
             DispatchQueue.main.async {
                 guard let data, error == nil else {
+                    if let error {
+                        print("Achievement network error (appid \(appid)):", error.localizedDescription)
+                    }
                     completion(nil)
                     return
                 }
@@ -34,6 +43,11 @@ class AchievementFetch {
                     let stats = decoded.playerstats
                     // success == false means the game has no achievement system
                     guard stats.success == true, let dtos = stats.achievements else {
+                        if let http = response as? HTTPURLResponse {
+                            print("Achievement fetch failed (appid \(appid)), status:", http.statusCode, "error:", stats.error ?? "unknown")
+                        } else {
+                            print("Achievement fetch failed (appid \(appid)), error:", stats.error ?? "unknown")
+                        }
                         completion(nil)
                         return
                     }
