@@ -14,7 +14,7 @@ final class LibraryViewController: UIViewController {
         case idle, loading, loaded(GameAchievements?)
     }
     private var achievementsStates: [Int: AchievementLoadState] = [:]
-
+    
     private var allGames: [Game] = []
     private var searchText = ""
 
@@ -23,6 +23,8 @@ final class LibraryViewController: UIViewController {
             ? allGames
             : allGames.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
     }
+    
+    var steamID: String?
 
     private let searchBar: UISearchBar = {
         let sb = UISearchBar()
@@ -154,10 +156,14 @@ final class LibraryViewController: UIViewController {
         spinner.startAnimating()
         collectionView.isHidden = true
 
-        fetchGame().fetchOwnedGames(
-            apiKey: "CD89B4D216CF0A68E8970744826761AF",
-            steamID: "76561198803168936"
-        ) { [weak self] games in
+        guard let steamID = steamID else {
+            print("steamID is nil")
+            spinner.stopAnimating()
+            collectionView.isHidden = false
+            return
+        }
+
+        fetchGame().fetchOwnedGames(steamID: steamID) { [weak self] games in
             guard let self else { return }
             self.spinner.stopAnimating()
             self.collectionView.isHidden = false

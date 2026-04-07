@@ -9,20 +9,24 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var steamID: String?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        fetchGame().fetchOwnedGames(apiKey: "CD89B4D216CF0A68E8970744826761AF", steamID: "76561198803168936") { games in
-            for game in games {
+        guard let steamID = steamID else {
+            print("steam ID is nil")
+            return
+        }
+        
+        let fetcher = fetchGame()
+        fetcher.fetchOwnedGames(steamID: steamID) { games in
+            print("Games count:", games.count)
+            for game in games.prefix(10) {
                 print(game.name)
             }
         }
-        
-        let storyboard = UIStoryboard(name: "HomePageScreen", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "HomePageScreen")
-
-        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

@@ -33,6 +33,7 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("LoginViewController loaded")
         updateRememberMeButton()
         
         // text field
@@ -64,7 +65,7 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
     }
     
     private func startSteamLogin() {
-        guard let url = URL(string:"http://10.232.214.33:5050/auth/steam/login") else{return}
+        guard let url = URL(string:"http://18.136.66.102/auth/steam/login") else{return}
         authSession = ASWebAuthenticationSession(url: url, callbackURLScheme: "steamair") {callbackURL, error in
             if let error = error {
                 print("Steam login error:", error.localizedDescription)
@@ -81,18 +82,28 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
             let components = URLComponents(url: callbackURL, resolvingAgainstBaseURL: false)
             let steamID = components?.queryItems?.first(where: { $0.name == "steamid" })?.value
             print("Steam ID:", steamID ?? "Not found")
-
+            
             if let steamID = steamID {
-                let fetcher = FetchGame()
-                fetcher.fetchOwnedGames(steamID: steamID) { games in
-                    print("Games count:", games.count)
-                    
-                    for game in games.prefix(10) {
-                        print("Name:", game.name)
-                        print("Hours:", game.playtimeHours)
-                        print("Icon URL:", game.iconURL?.absoluteString ?? "nil")
-                        print("-----")
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "HomePageScreen", bundle: nil)
+                    guard let tabBarVC = storyboard.instantiateViewController(withIdentifier: "HomePageScreen") as? UITabBarController else {
+                        print("Failed to load HomePageScreen tab bar controller")
+                        return
                     }
+
+                    for case let nav as UINavigationController in tabBarVC.viewControllers ?? [] {
+                        guard let rootVC = nav.viewControllers.first else { continue }
+                        if let homeVC = rootVC as? HomeViewController {
+                            homeVC.steamID = steamID
+                        } else if let libraryVC = rootVC as? LibraryViewController {
+                            libraryVC.steamID = steamID
+                        } else if let wishlistVC = rootVC as? WishlistViewController {
+                            wishlistVC.steamID = steamID
+                        }
+                    }
+
+                    tabBarVC.modalPresentationStyle = .fullScreen
+                    self.present(tabBarVC, animated: true)
                 }
             }
         }
@@ -104,7 +115,4 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return self.view.window ?? ASPresentationAnchor()
     }
-    
-    
-   
-    }
+}

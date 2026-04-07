@@ -16,6 +16,7 @@ final class WishlistViewController: UIViewController {
     private var deals: [SteamDeal] = []
     private var isLoadingWishlist = false
     private var isLoadingDeals = false
+    var steamID: String?
 
     /// Merged list: Steam wishlist + locally-added games (deduplicated by appid)
     private var wishlistItems: [WishlistItem] {
@@ -147,7 +148,16 @@ final class WishlistViewController: UIViewController {
         isLoadingWishlist = true
         if currentTab == .wishlist { spinner.startAnimating() }
 
-        WishlistFetch().fetchWishlist(steamID: "76561198803168956") { [weak self] items in
+        guard let steamID = steamID else {
+            isLoadingWishlist = false
+            spinner.stopAnimating()
+            steamWishlistItems = []
+            tableView.reloadData()
+            updateEmptyState()
+            return
+        }
+
+        WishlistFetch().fetchWishlist(steamID: steamID) { [weak self] items in
             guard let self else { return }
             self.isLoadingWishlist = false
             self.steamWishlistItems = items

@@ -14,6 +14,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     var games: [Game] = []
     var news: [News] = []
+    var steamID: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,9 +28,12 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             layout.scrollDirection = .horizontal
             layout.itemSize = CGSize(width: 140, height: 180)
         }
+        guard let steamID = steamID else {
+            print("steamID is nil")
+            return
+        }
         
-        
-        fetchGame().fetchOwnedGames(apiKey: "CD89B4D216CF0A68E8970744826761AF", steamID: "76561198803168936") { games in
+        fetchGame().fetchOwnedGames(steamID: steamID) { games in
                 DispatchQueue.main.async {
                     self.games = games
                     self.recommendedCollectionView.reloadData()

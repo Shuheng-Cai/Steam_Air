@@ -11,9 +11,9 @@ class fetchGame{
     
     var games: [Game] = []
     
-    func fetchOwnedGames(apiKey: String, steamID: String, completion: @escaping ([Game]) -> Void) {
+    func fetchOwnedGames(steamID: String, completion: @escaping ([Game]) -> Void) {
         
-        let urlString = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=\(apiKey)&steamid=\(steamID)&include_appinfo=true&format=json"
+        let urlString = "http://18.136.66.102/owned-games?steamid=\(steamID)"
         
         guard let url = URL(string: urlString) else {
             completion([])
@@ -28,7 +28,7 @@ class fetchGame{
                 }
                 do {
                     let decoded = try JSONDecoder().decode(OwnedGamesResponse.self, from: data)
-                    let games = decoded.response.games.map { $0.toGame() }
+                    let games = (decoded.response.games ?? []).map { $0.toGame() }
                     completion(games)
                 } catch {
                     print("Decode error:", error)
