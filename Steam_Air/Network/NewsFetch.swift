@@ -6,12 +6,13 @@
 //
 
 import Foundation
+internal import UIKit
 
 class fetchNews{
     var news: [News] = []
     func fetchNews(appid: Int, completion: @escaping ([News]) -> Void) {
         print("🔥 fetchNews called with appid:", appid)
-            let urlString = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=\(appid)&count=1&maxlength=500&format=json"
+            let urlString = "https://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?appid=\(appid)&count=1&format=json"
             
             guard let url = URL(string: urlString) else {
                 print("Invalid URL")

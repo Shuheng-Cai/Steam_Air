@@ -5,7 +5,7 @@
 //  Created by Lucy K Y XU on 4/5/26.
 //
 
-import UIKit
+internal import UIKit
 
 final class PriceHistoryViewController: UIViewController {
 

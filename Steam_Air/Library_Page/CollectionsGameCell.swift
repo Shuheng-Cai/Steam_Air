@@ -6,7 +6,7 @@
 //  Collections tab — table view cell showing a game's achievement progress.
 //
 
-import UIKit
+internal import UIKit
 
 final class CollectionsGameCell: UITableViewCell {
 

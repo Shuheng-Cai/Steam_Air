@@ -5,7 +5,7 @@
 //  Created by  csh's computer on 3/23/26.
 //
 
-import UIKit
+internal import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 

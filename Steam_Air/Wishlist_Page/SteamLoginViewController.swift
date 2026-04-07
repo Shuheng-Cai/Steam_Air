@@ -7,7 +7,7 @@
 //  WKWebView cookie store and saved to SteamAuthManager.
 //
 
-import UIKit
+internal import UIKit
 import WebKit
 
 final class SteamLoginViewController: UIViewController {

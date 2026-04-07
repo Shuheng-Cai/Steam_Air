@@ -5,7 +5,7 @@
 //  Created by  csh's computer on 4/3/26.
 //
 
-import UIKit
+internal import UIKit
 
 class DetailViewController: UIViewController {
 

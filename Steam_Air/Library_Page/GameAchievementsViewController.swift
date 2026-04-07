@@ -6,7 +6,7 @@
 //  Detail page: lists all achievements (unlocked + locked) for a single game.
 //
 
-import UIKit
+internal import UIKit
 
 final class GameAchievementsViewController: UIViewController {
 
