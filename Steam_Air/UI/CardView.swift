@@ -5,7 +5,7 @@
 //  Created by  csh's computer on 3/30/26.
 //
 
-import UIKit
+internal import UIKit
 
 
 class CardView : UIView{

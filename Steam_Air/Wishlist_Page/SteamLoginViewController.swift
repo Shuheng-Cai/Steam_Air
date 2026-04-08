@@ -7,16 +7,14 @@
 //  WKWebView cookie store and saved to SteamAuthManager.
 //
 
-import UIKit
+internal import UIKit
 import WebKit
 
 final class SteamLoginViewController: UIViewController {
 
-    /// Called on the main queue after successful authentication.
     var onAuthenticated: (() -> Void)?
 
     private lazy var webView: WKWebView = {
-        // Use a non-persistent data store so existing app sessions are not affected
         let config = WKWebViewConfiguration()
         let wv = WKWebView(frame: .zero, configuration: config)
         wv.navigationDelegate = self
@@ -31,7 +29,6 @@ final class SteamLoginViewController: UIViewController {
         return s
     }()
 
-    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -89,14 +86,10 @@ final class SteamLoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Actions
-
     @objc private func cancelTapped() {
         dismiss(animated: true)
     }
 }
-
-// MARK: - WKNavigationDelegate
 
 extension SteamLoginViewController: WKNavigationDelegate {
 

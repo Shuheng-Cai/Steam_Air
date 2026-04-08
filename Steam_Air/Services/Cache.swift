@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import UIKit
+internal import UIKit
 
 class GameImageCache {
     static let shared = NSCache<NSString, UIImage>()

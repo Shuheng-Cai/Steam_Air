@@ -5,7 +5,7 @@
 //  Created by  csh's computer on 3/30/26.
 //
 
-import UIKit
+internal import UIKit
 
 class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         }
         
         if collectionView == newsCollectionView{
-            return news.count
+            return min(news.count, 10)
         }
         
         return 0
@@ -104,6 +104,15 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             detailVC.Game = selectGame
             
+            self.navigationController?.pushViewController(detailVC, animated: true)
+        }
+        
+        if collectionView == newsCollectionView {
+            let selectNews = news[indexPath.row]
+            let storyboard = UIStoryboard(name: "HomePageScreen", bundle: nil)
+            let detailVC = storyboard.instantiateViewController(withIdentifier: "NewsDetailViewController") as! NewsDetailViewController
+            
+            detailVC.news = selectNews
             self.navigationController?.pushViewController(detailVC, animated: true)
         }
         
