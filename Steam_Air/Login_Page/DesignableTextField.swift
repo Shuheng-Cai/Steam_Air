@@ -3,7 +3,7 @@
 //  Steam_Air
 //
 
-import UIKit
+internal import UIKit
 
 @IBDesignable
 class DesignableTextField: UITextField {

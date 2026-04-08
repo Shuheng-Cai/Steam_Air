@@ -5,7 +5,7 @@
 //  Created by Sicheng on 3/30/26.
 //
 
-import UIKit
+internal import UIKit
 import AuthenticationServices
 
 class LoginViewController: UIViewController, ASWebAuthenticationPresentationContextProviding {
