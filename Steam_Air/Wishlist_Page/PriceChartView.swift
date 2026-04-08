@@ -42,13 +42,9 @@ final class PriceChartView: UIView {
 
     required init?(coder: NSCoder) { fatalError() }
 
-    // MARK: - Layout constants
 
-    /// Left gutter width for Y-axis price labels
     private let yAxisWidth: CGFloat  = 46
-    /// Bottom gutter height for X-axis date labels
     private let xAxisHeight: CGFloat = 20
-    /// Internal padding around the plot area
     private let plotPad = UIEdgeInsets(top: 20, left: 6, bottom: 4, right: 6)
 
     private func plotRect(in bounds: CGRect) -> CGRect {
@@ -59,8 +55,6 @@ final class PriceChartView: UIView {
             height: bounds.height - xAxisHeight - plotPad.top  - plotPad.bottom
         )
     }
-
-    // MARK: - Drawing
 
     override func draw(_ rect: CGRect) {
         guard dataPoints.count > 1 else { return }
@@ -80,7 +74,6 @@ final class PriceChartView: UIView {
             return CGPoint(x: x, y: y)
         }
 
-        // MARK: Y-axis gridlines + labels (3 levels)
         let yLevels: [Double] = [minP, (minP + maxP) / 2, maxP]
         let axisAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 10),
@@ -108,7 +101,6 @@ final class PriceChartView: UIView {
                      withAttributes: axisAttrs)
         }
 
-        // MARK: X-axis labels (first, middle, last)
         let xFmt = DateFormatter()
         xFmt.dateFormat = "MMM yy"
         let xIndices = [0, dataPoints.count / 2, dataPoints.count - 1]
@@ -123,7 +115,6 @@ final class PriceChartView: UIView {
                      withAttributes: axisAttrs)
         }
 
-        // MARK: Fill under line
         let fillPath = UIBezierPath()
         fillPath.move(to: CGPoint(x: plot.minX, y: plot.maxY))
         for i in 0..<dataPoints.count { fillPath.addLine(to: chartPoint(at: i)) }
@@ -132,7 +123,6 @@ final class PriceChartView: UIView {
         UIColor.systemBlue.withAlphaComponent(0.12).setFill()
         fillPath.fill()
 
-        // MARK: Line
         let linePath = UIBezierPath()
         for i in 0..<dataPoints.count {
             let pt = chartPoint(at: i)
@@ -144,7 +134,6 @@ final class PriceChartView: UIView {
         context.setLineJoin(.round)
         linePath.stroke()
 
-        // MARK: Min / Max markers
         if let maxPrice = prices.max(), let minPrice = prices.min(),
            let maxIdx   = prices.firstIndex(of: maxPrice),
            let minIdx   = prices.firstIndex(of: minPrice),
@@ -165,7 +154,7 @@ final class PriceChartView: UIView {
             )
         }
 
-        // MARK: Tooltip crosshair + dot
+
         if tooltipIndex >= 0 && tooltipIndex < dataPoints.count {
             let tx = chartPoint(at: tooltipIndex).x
             context.setStrokeColor(UIColor.systemBlue.withAlphaComponent(0.5).cgColor)
@@ -182,7 +171,6 @@ final class PriceChartView: UIView {
         }
     }
 
-    // MARK: - Min/Max marker helper
 
     private func drawPriceMarker(context: CGContext,
                                   at point: CGPoint,
@@ -191,7 +179,6 @@ final class PriceChartView: UIView {
                                   plot: CGRect) {
         let color: UIColor = isHigh ? .systemRed : .systemGreen
 
-        // Dot with white border
         let r: CGFloat = 5
         let dotRect = CGRect(x: point.x - r, y: point.y - r, width: r * 2, height: r * 2)
         context.setFillColor(color.cgColor)
@@ -200,7 +187,6 @@ final class PriceChartView: UIView {
         context.setLineWidth(1.5)
         context.strokeEllipse(in: dotRect)
 
-        // Price label — above for high, below for low
         let labelStr = String(format: "$%.2f", price) as NSString
         let labelAttrs: [NSAttributedString.Key: Any] = [
             .font: UIFont.systemFont(ofSize: 10, weight: .bold),
@@ -212,7 +198,6 @@ final class PriceChartView: UIView {
             ? point.y - r - gap - labelSize.height
             : point.y + r + gap
 
-        // Clamp X so label stays inside the plot area
         var labelX = point.x - labelSize.width / 2
         labelX = max(yAxisWidth, min(plot.maxX - labelSize.width, labelX))
 
@@ -223,8 +208,6 @@ final class PriceChartView: UIView {
                                  width: labelSize.width, height: labelSize.height),
                       withAttributes: labelAttrs)
     }
-
-    // MARK: - Tap to show tooltip
 
     @objc private func handleTap(_ recognizer: UITapGestureRecognizer) {
         guard dataPoints.count > 1 else { return }

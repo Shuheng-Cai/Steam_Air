@@ -10,7 +10,6 @@ internal import UIKit
 final class WishlistGameCell: UITableViewCell {
     static let reuseID = "WishlistGameCell"
 
-    // Fixed 2:3 portrait cover — same ratio as library_600x900.jpg
     private static let coverWidth: CGFloat  = 60
     private static let coverHeight: CGFloat = 90   // 60 × 1.5
 
