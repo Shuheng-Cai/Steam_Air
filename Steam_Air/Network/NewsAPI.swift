@@ -21,6 +21,7 @@ struct NewsDTO: Codable {
     let title: String
     let url: String
     let contents: String
+    let date: Int?
 }
 
 extension NewsDTO {
@@ -30,7 +31,7 @@ extension NewsDTO {
             content: contents,
             iconURL: "https://cdn.cloudflare.steamstatic.com/steam/apps/\(appid)/library_600x900.jpg",
             url: url,
+            publishedAt: date.map { Date(timeIntervalSince1970: TimeInterval($0)) }
         )
     }
 }
-
