@@ -5,7 +5,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
-        <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -36,120 +35,11 @@
                     <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="RECOMMENDED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="zTd-yD-AR7">
-                                <rect key="frame" x="0.0" y="172" width="429" height="20"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <rect key="contentStretch" x="0.45000000000000001" y="0.0" width="1" height="1"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </label>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CrY-d9-9bi">
-                                <rect key="frame" x="0.0" y="226" width="429" height="200"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="wNB-ou-Zq9">
-                                    <size key="itemSize" width="159" height="170"/>
-                                    <size key="estimatedItemSize" width="200" height="200"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="GameCell" id="JfX-6L-aOX" customClass="GameCell" customModule="Steam_Air" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="iOU-9W-kHr">
-                                            <rect key="frame" x="0.0" y="0.0" width="200" height="200"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H2u-sy-9v8" customClass="CardImageView" customModule="Steam_Air" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="180" height="180"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ta6-DM-z7P">
-                                                    <rect key="frame" x="8" y="156" width="160" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" systemColor="systemBackgroundColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </collectionViewCellContentView>
-                                        <size key="customSize" width="200" height="200"/>
-                                        <connections>
-                                            <outlet property="gameImageView" destination="H2u-sy-9v8" id="kay-ko-Lt6"/>
-                                            <outlet property="gameNameLabel" destination="Ta6-DM-z7P" id="xGF-4H-vuI"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="mEE-Oc-S0e" userLabel="News Collection View">
-                                <rect key="frame" x="0.0" y="459" width="393" height="288"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="MYD-Ks-OJ8">
-                                    <size key="itemSize" width="376" height="140"/>
-                                    <size key="estimatedItemSize" width="376" height="139"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="NewsCell" id="QRi-A3-axf" customClass="NewsCell" customModule="Steam_Air" customModuleProvider="target">
-                                        <rect key="frame" x="8.6666666666666661" y="0.0" width="376" height="140"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Gvn-L4-uhQ" customClass="CardView" customModule="Steam_Air" customModuleProvider="target">
-                                            <rect key="frame" x="0.0" y="0.0" width="376" height="140"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Pq-Pv-5jd" customClass="CardImageView" customModule="Steam_Air" customModuleProvider="target">
-                                                    <rect key="frame" x="8" y="8" width="112" height="108"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="APv-dn-ojl">
-                                                    <rect key="frame" x="128" y="8" width="240" height="75"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                                    <nil key="textColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mVe-OJ-N66">
-                                                    <rect key="frame" x="128" y="74" width="240" height="25"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
-                                        </collectionViewCellContentView>
-                                        <size key="customSize" width="376" height="140"/>
-                                        <connections>
-                                            <outlet property="newsDescription" destination="mVe-OJ-N66" id="A24-gh-Dxj"/>
-                                            <outlet property="newsImage" destination="7Pq-Pv-5jd" id="6be-S8-BR7"/>
-                                            <outlet property="newsTitle" destination="APv-dn-ojl" id="XMD-j4-OVk"/>
-                                        </connections>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999998807907104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="NEWS" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jZL-jH-bQc" userLabel="NEWS">
-                                <rect key="frame" x="0.0" y="430" width="429" height="20.333333333333314"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <rect key="contentStretch" x="0.45000000000000001" y="0.0" width="1" height="1"/>
-                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
-                                <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </label>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" title="HOME" id="lJb-UT-2zr"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="newsCollectionView" destination="mEE-Oc-S0e" id="tpQ-Cs-eVU"/>
-                        <outlet property="recommendedCollectionView" destination="CrY-d9-9bi" id="4Lu-Cz-zTQ"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -162,72 +52,9 @@
                     <view key="view" contentMode="scaleToFill" id="Lo1-ON-ddX">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="30" translatesAutoresizingMaskIntoConstraints="NO" id="pLn-vf-7Jg">
-                                <rect key="frame" x="6" y="168" width="381" height="601"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UBs-hc-F5e" customClass="CardImageView" customModule="Steam_Air" customModuleProvider="target">
-                                        <rect key="frame" x="37" y="0.0" width="307" height="151"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="151" id="C7D-do-u19"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UwV-YA-zIG">
-                                        <rect key="frame" x="6" y="181" width="369" height="50"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="3T8-ub-2zV"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="Impact" family="Impact" pointSize="20"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pkc-Pz-Pq7">
-                                        <rect key="frame" x="6" y="261" width="369" height="340"/>
-                                        <subviews>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="j9z-ck-jXJ">
-                                                <rect key="frame" x="6" y="6" width="369" height="334"/>
-                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                                <color key="textColor" systemColor="labelColor"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                            </textView>
-                                        </subviews>
-                                        <constraints>
-                                            <constraint firstItem="j9z-ck-jXJ" firstAttribute="leading" secondItem="pkc-Pz-Pq7" secondAttribute="leading" constant="6" id="07i-ek-6O6"/>
-                                            <constraint firstItem="j9z-ck-jXJ" firstAttribute="bottom" secondItem="6oo-rc-Qtq" secondAttribute="bottom" id="7en-Ot-exp"/>
-                                            <constraint firstItem="j9z-ck-jXJ" firstAttribute="width" secondItem="pkc-Pz-Pq7" secondAttribute="width" id="9Bc-RZ-r6q"/>
-                                            <constraint firstAttribute="height" constant="300" id="BEg-Gs-5Jl"/>
-                                            <constraint firstAttribute="bottom" secondItem="j9z-ck-jXJ" secondAttribute="bottom" constant="6" id="BGb-7Q-Ck8"/>
-                                            <constraint firstAttribute="trailing" secondItem="j9z-ck-jXJ" secondAttribute="trailing" constant="6" id="Rtb-sl-Iff"/>
-                                            <constraint firstItem="j9z-ck-jXJ" firstAttribute="top" secondItem="pkc-Pz-Pq7" secondAttribute="top" constant="6" id="ztn-2o-Nmz"/>
-                                        </constraints>
-                                        <viewLayoutGuide key="contentLayoutGuide" id="z7m-zF-ks9"/>
-                                        <viewLayoutGuide key="frameLayoutGuide" id="6oo-rc-Qtq"/>
-                                    </scrollView>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="UwV-YA-zIG" firstAttribute="leading" secondItem="pLn-vf-7Jg" secondAttribute="leading" constant="6" id="7wA-JP-Cb7"/>
-                                    <constraint firstAttribute="trailing" secondItem="UwV-YA-zIG" secondAttribute="trailing" constant="6" id="8sY-YF-C8H"/>
-                                    <constraint firstItem="pkc-Pz-Pq7" firstAttribute="leading" secondItem="pLn-vf-7Jg" secondAttribute="leading" constant="6" id="HmW-pI-ESr"/>
-                                    <constraint firstItem="UBs-hc-F5e" firstAttribute="leading" secondItem="pLn-vf-7Jg" secondAttribute="leading" constant="37" id="w9i-3U-tHb"/>
-                                </constraints>
-                            </stackView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="jZE-TY-xM8"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="jZE-TY-xM8" firstAttribute="bottom" secondItem="pLn-vf-7Jg" secondAttribute="bottom" constant="15" id="29x-OM-xRN"/>
-                            <constraint firstItem="pLn-vf-7Jg" firstAttribute="leading" secondItem="Lo1-ON-ddX" secondAttribute="leading" constant="6" id="7BN-k0-ke5"/>
-                            <constraint firstItem="jZE-TY-xM8" firstAttribute="trailing" secondItem="pLn-vf-7Jg" secondAttribute="trailing" constant="6" id="jvb-Ri-lIH"/>
-                            <constraint firstItem="pLn-vf-7Jg" firstAttribute="top" secondItem="jZE-TY-xM8" secondAttribute="top" constant="50" id="qy1-am-2OG"/>
-                        </constraints>
                     </view>
-                    <connections>
-                        <outlet property="Image" destination="UBs-hc-F5e" id="Fjh-1G-8xU"/>
-                        <outlet property="newsTitle" destination="UwV-YA-zIG" id="VJZ-Yo-DaW"/>
-                        <outlet property="textView" destination="j9z-ck-jXJ" id="1qB-dA-7fQ"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="giT-Ms-sE3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -240,81 +67,8 @@
                     <view key="view" contentMode="scaleToFill" id="o5W-pq-Wrc">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0Ak-It-Gak">
-                                <rect key="frame" x="16" y="142" width="361" height="491"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QgN-Zk-tiV" customClass="CardImageView" customModule="Steam_Air" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="361" height="250"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="250" id="NML-QQ-SwQ"/>
-                                        </constraints>
-                                    </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jsL-fg-ybJ">
-                                        <rect key="frame" x="0.0" y="258" width="361" height="35"/>
-                                        <fontDescription key="fontDescription" name="HoeflerText-Black" family="Hoefler Text" pointSize="35"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" alpha="0.90000000000000002" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GH6-rs-cwU">
-                                        <rect key="frame" x="0.0" y="301" width="361" height="22"/>
-                                        <fontDescription key="fontDescription" name="Impact" family="Impact" pointSize="18"/>
-                                        <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="myF-DV-0Jx" customClass="CardView" customModule="Steam_Air" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="331" width="361" height="160"/>
-                                        <subviews>
-                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="S8v-nv-yUb">
-                                                <rect key="frame" x="0.0" y="20" width="361" height="116"/>
-                                                <subviews>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vFJ-1X-zzI">
-                                                        <rect key="frame" x="0.0" y="0.0" width="361" height="50"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="50" id="nth-vQ-7Wg"/>
-                                                        </constraints>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="filled" title="View On Steam">
-                                                            <fontDescription key="titleFontDescription" name="Impact" family="Impact" pointSize="19"/>
-                                                        </buttonConfiguration>
-                                                        <connections>
-                                                            <action selector="viewOnSteamTapped:" destination="XEW-Ke-9om" eventType="touchUpInside" id="WLA-tp-002"/>
-                                                        </connections>
-                                                    </button>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TPK-9I-nvP">
-                                                        <rect key="frame" x="0.0" y="66" width="361" height="50"/>
-                                                        <constraints>
-                                                            <constraint firstAttribute="height" constant="50" id="2LX-xY-UXE"/>
-                                                        </constraints>
-                                                        <state key="normal" title="Button"/>
-                                                        <buttonConfiguration key="configuration" style="tinted" title="Add to Wishlist">
-                                                            <fontDescription key="titleFontDescription" name="Impact" family="Impact" pointSize="19"/>
-                                                        </buttonConfiguration>
-                                                        <connections>
-                                                            <action selector="wishlistButtonTapped:" destination="XEW-Ke-9om" eventType="touchUpInside" id="WLA-tp-001"/>
-                                                        </connections>
-                                                    </button>
-                                                </subviews>
-                                            </stackView>
-                                        </subviews>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstItem="S8v-nv-yUb" firstAttribute="top" secondItem="myF-DV-0Jx" secondAttribute="top" constant="20" id="WPw-wU-cMu"/>
-                                            <constraint firstAttribute="height" constant="160" id="ir0-Wj-N3R"/>
-                                            <constraint firstItem="S8v-nv-yUb" firstAttribute="leading" secondItem="myF-DV-0Jx" secondAttribute="leading" id="nha-9J-669"/>
-                                            <constraint firstAttribute="trailing" secondItem="S8v-nv-yUb" secondAttribute="trailing" id="xDb-uD-B2o"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                            </stackView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="H6A-GW-psf"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="0Ak-It-Gak" firstAttribute="top" secondItem="o5W-pq-Wrc" secondAttribute="top" constant="142" id="SBg-Vp-EQm"/>
-                            <constraint firstItem="0Ak-It-Gak" firstAttribute="leading" secondItem="H6A-GW-psf" secondAttribute="leading" constant="16" id="k7F-vq-cuH"/>
-                            <constraint firstItem="H6A-GW-psf" firstAttribute="trailing" secondItem="0Ak-It-Gak" secondAttribute="trailing" constant="16" id="wCO-Tg-hew"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="DETAIL" id="GIa-Ci-e9l">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="ellipsis" catalog="system" id="f17-y3-zmX">
@@ -326,16 +80,10 @@
                             </button>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="GamePlayTime" destination="GH6-rs-cwU" id="i5M-wL-LX4"/>
-                        <outlet property="GamePosterImage" destination="QgN-Zk-tiV" id="sQo-gw-J67"/>
-                        <outlet property="GameTitle" destination="jsL-fg-ybJ" id="RMl-2u-0k1"/>
-                        <outlet property="wishlistButton" destination="TPK-9I-nvP" id="WLB-tp-001"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Om9-sq-sbw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3516.7938931297708" y="206.33802816901411"/>
+            <point key="canvasLocation" x="3474" y="366"/>
         </scene>
         <!--Game Home Navigation Controller-->
         <scene sceneID="0sE-4Y-Eex">
@@ -467,12 +215,6 @@
     </scenes>
     <resources>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
-        <systemColor name="labelColor">
-            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="opaqueSeparatorColor">
-            <color red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

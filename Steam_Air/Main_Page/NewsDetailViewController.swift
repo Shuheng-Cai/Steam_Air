@@ -11,11 +11,6 @@ class NewsDetailViewController: UIViewController {
 
     var news: News?
 
-    // Keep old storyboard connections compatible.
-    @IBOutlet weak var Image: CardImageView?
-    @IBOutlet weak var newsTitle: UILabel?
-    @IBOutlet weak var textView: UITextView?
-
     private var latestNews: [News] = []
 
     private let posterCard = UIView()
@@ -72,15 +67,8 @@ class NewsDetailViewController: UIViewController {
             action: nil
         )
 
-        hideLegacyStoryboardViews()
         setupLayout()
         loadNewsList()
-    }
-
-    private func hideLegacyStoryboardViews() {
-        Image?.isHidden = true
-        newsTitle?.isHidden = true
-        textView?.isHidden = true
     }
 
     private func setupLayout() {

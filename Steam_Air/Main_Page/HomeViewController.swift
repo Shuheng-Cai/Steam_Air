@@ -9,10 +9,6 @@ internal import UIKit
 
 class HomeViewController: UIViewController {
 
-    // Kept to avoid storyboard outlet breakage while moving to table-based layout.
-    @IBOutlet weak var recommendedCollectionView: UICollectionView?
-    @IBOutlet weak var newsCollectionView: UICollectionView?
-
     var games: [Game] = []
     var news: [News] = []
     var steamID: String?
@@ -46,7 +42,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
-        hideLegacyStoryboardViews()
         setupTableView()
         fetchHomeData()
     }
@@ -59,11 +54,6 @@ class HomeViewController: UIViewController {
             target: nil,
             action: nil
         )
-    }
-
-    private func hideLegacyStoryboardViews() {
-        recommendedCollectionView?.isHidden = true
-        newsCollectionView?.isHidden = true
     }
 
     private func setupTableView() {

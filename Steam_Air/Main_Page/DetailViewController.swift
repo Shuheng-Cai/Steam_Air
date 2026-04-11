@@ -11,12 +11,6 @@ class DetailViewController: UIViewController {
 
     var Game: Game?
 
-    // Keep legacy storyboard outlets/actions compatible.
-    @IBOutlet weak var GamePosterImage: CardImageView?
-    @IBOutlet weak var GameTitle: UILabel?
-    @IBOutlet weak var GamePlayTime: UILabel?
-    @IBOutlet weak var wishlistButton: UIButton?
-
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
         sv.translatesAutoresizingMaskIntoConstraints = false
@@ -111,17 +105,9 @@ class DetailViewController: UIViewController {
             action: nil
         )
 
-        hideLegacyStoryboardViews()
         setupLayout()
         bindData()
         updateWishlistButton()
-    }
-
-    private func hideLegacyStoryboardViews() {
-        GamePosterImage?.isHidden = true
-        GameTitle?.isHidden = true
-        GamePlayTime?.isHidden = true
-        wishlistButton?.isHidden = true
     }
 
     private func setupLayout() {
