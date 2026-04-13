@@ -10,6 +10,7 @@ internal import UIKit
 class HomeViewController: UIViewController {
 
     var games: [Game] = []
+    var recommendedGames: [Game] = []
     var news: [News] = []
     var steamID: String?
 
@@ -81,14 +82,29 @@ class HomeViewController: UIViewController {
             return
         }
 
+        fetchRecommendedFromStore()
+
         fetchGame().fetchOwnedGames(steamID: steamID) { [weak self] games in
             guard let self else { return }
 
             self.games = games
                 .sorted { $0.playtime_forever > $1.playtime_forever }
+            if self.recommendedGames.isEmpty {
+                self.recommendedGames = Array(self.games.prefix(12))
+            }
             self.tableView.reloadData()
 
             self.fetchUpdates(for: self.games)
+        }
+    }
+
+    private func fetchRecommendedFromStore() {
+        DealsFetch().fetchRecommendedGames(limit: 12) { [weak self] items in
+            guard let self else { return }
+            if !items.isEmpty {
+                self.recommendedGames = items
+                self.tableView.reloadData()
+            }
         }
     }
 
@@ -194,7 +210,7 @@ extension HomeViewController: UITableViewDataSource {
                 withIdentifier: HomeRecommendedRowCell.reuseID,
                 for: indexPath
             ) as! HomeRecommendedRowCell
-            cell.configure(games: Array(games.prefix(12))) { [weak self] game in
+            cell.configure(games: recommendedGames) { [weak self] game in
                 self?.showGameDetail(game)
             }
             return cell
