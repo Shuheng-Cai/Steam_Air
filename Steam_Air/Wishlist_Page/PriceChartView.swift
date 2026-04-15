@@ -103,7 +103,12 @@ final class PriceChartView: UIView {
 
         let xFmt = DateFormatter()
         xFmt.dateFormat = "MMM yy"
-        let xIndices = [0, dataPoints.count / 2, dataPoints.count - 1]
+        let desiredTickCount = min(8, max(4, Int(plot.width / 140)))
+        let step = max(1, (dataPoints.count - 1) / max(1, desiredTickCount - 1))
+        var xIndices: [Int] = Array(stride(from: 0, through: dataPoints.count - 1, by: step))
+        if xIndices.last != dataPoints.count - 1 {
+            xIndices.append(dataPoints.count - 1)
+        }
         for idx in xIndices {
             let x   = plot.minX + CGFloat(idx) * xStep
             let str = xFmt.string(from: dataPoints[idx].date) as NSString
@@ -117,16 +122,31 @@ final class PriceChartView: UIView {
 
         let fillPath = UIBezierPath()
         fillPath.move(to: CGPoint(x: plot.minX, y: plot.maxY))
-        for i in 0..<dataPoints.count { fillPath.addLine(to: chartPoint(at: i)) }
+        fillPath.addLine(to: chartPoint(at: 0))
+        if dataPoints.count > 1 {
+            for i in 1..<dataPoints.count {
+                let prev = chartPoint(at: i - 1)
+                let curr = chartPoint(at: i)
+                // Step chart: hold previous price horizontally, then jump vertically.
+                fillPath.addLine(to: CGPoint(x: curr.x, y: prev.y))
+                fillPath.addLine(to: curr)
+            }
+        }
         fillPath.addLine(to: CGPoint(x: plot.maxX, y: plot.maxY))
         fillPath.close()
         UIColor.systemBlue.withAlphaComponent(0.12).setFill()
         fillPath.fill()
 
         let linePath = UIBezierPath()
-        for i in 0..<dataPoints.count {
-            let pt = chartPoint(at: i)
-            if i == 0 { linePath.move(to: pt) } else { linePath.addLine(to: pt) }
+        linePath.move(to: chartPoint(at: 0))
+        if dataPoints.count > 1 {
+            for i in 1..<dataPoints.count {
+                let prev = chartPoint(at: i - 1)
+                let curr = chartPoint(at: i)
+                // Step chart: hold previous price horizontally, then jump vertically.
+                linePath.addLine(to: CGPoint(x: curr.x, y: prev.y))
+                linePath.addLine(to: curr)
+            }
         }
         context.setStrokeColor(UIColor.systemBlue.cgColor)
         context.setLineWidth(2)

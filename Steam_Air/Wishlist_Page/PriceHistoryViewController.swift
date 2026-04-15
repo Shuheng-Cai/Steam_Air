@@ -11,14 +11,11 @@ final class PriceHistoryViewController: UIViewController {
 
     var wishlistItem: WishlistItem?
     private var priceHistory: GamePriceHistory?
-    private var currentRange: TimeRange = .oneYear
+    private let historyFetcher = PriceHistoryFetch()
+    private var currentRange: TimeRange = .all
     private var rangeButtons: [UIButton] = []
 
     enum TimeRange: String, CaseIterable {
-        case sevenDays  = "7D"
-        case thirtyDays = "30D"
-        case sixMonths  = "6M"
-        case oneYear    = "1Y"
         case all        = "All"
     }
 
@@ -61,6 +58,17 @@ final class PriceHistoryViewController: UIViewController {
         cv.translatesAutoresizingMaskIntoConstraints = false
         return cv
     }()
+    private let chartScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        sv.showsHorizontalScrollIndicator = true
+        sv.showsVerticalScrollIndicator = false
+        sv.alwaysBounceHorizontal = true
+        sv.alwaysBounceVertical = false
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+    }()
+    private var chartWidthConstraint: NSLayoutConstraint?
+    private var hasAlignedToLatestOnCurrentData = false
 
     private let recommendationCard: UIView = {
         let v = UIView()
@@ -117,6 +125,11 @@ final class PriceHistoryViewController: UIViewController {
         updateAddToWishlistButton()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateChartWidth(for: chartView.dataPoints.count)
+    }
+
     private func setupNavigationBar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "ellipsis"),
@@ -158,8 +171,19 @@ final class PriceHistoryViewController: UIViewController {
 
         contentStack.addArrangedSubview(timeRangeStack)
         contentStack.addArrangedSubview(statsStack)
-        contentStack.addArrangedSubview(chartView)
-        chartView.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        contentStack.addArrangedSubview(chartScrollView)
+        chartScrollView.heightAnchor.constraint(equalToConstant: 220).isActive = true
+        chartScrollView.addSubview(chartView)
+
+        chartWidthConstraint = chartView.widthAnchor.constraint(equalToConstant: 600)
+        chartWidthConstraint?.isActive = true
+        NSLayoutConstraint.activate([
+            chartView.topAnchor.constraint(equalTo: chartScrollView.topAnchor),
+            chartView.leadingAnchor.constraint(equalTo: chartScrollView.leadingAnchor),
+            chartView.trailingAnchor.constraint(equalTo: chartScrollView.trailingAnchor),
+            chartView.bottomAnchor.constraint(equalTo: chartScrollView.bottomAnchor),
+            chartView.heightAnchor.constraint(equalTo: chartScrollView.heightAnchor),
+        ])
 
         recommendationCard.addSubview(recommendationTitle)
         recommendationCard.addSubview(recommendationSubtitle)
@@ -183,21 +207,74 @@ final class PriceHistoryViewController: UIViewController {
 
     private func loadData() {
         guard let item = wishlistItem else { return }
-        priceHistory = GamePriceHistory.mock(for: item)
-        updateDisplayForCurrentRange()
-        updateRecommendationCard()
+
+        recommendationTitle.text = "Loading Price History"
+        recommendationSubtitle.text = "Fetching live Steam price history..."
+        chartView.dataPoints = []
+        buildStatsCards(from: [])
+
+        historyFetcher.fetchPriceHistory(for: item) { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(let history):
+                self.priceHistory = history
+                self.updateDisplayForCurrentRange()
+                self.updateRecommendationCard()
+            case .failure(let error):
+                self.priceHistory = nil
+                self.chartView.dataPoints = []
+                self.buildStatsCards(from: [])
+                self.recommendationTitle.text = "Price History Unavailable"
+                if let typed = error as? PriceHistoryFetch.PriceHistoryError,
+                   case .missingAPIKey = typed {
+                    self.recommendationSubtitle.text = "Add ITADAPIKey in Info.plist to enable real price history."
+                } else {
+                    self.recommendationSubtitle.text = error.localizedDescription
+                }
+            }
+        }
     }
 
     private func updateDisplayForCurrentRange() {
         guard let history = priceHistory else { return }
         let points = filteredPoints(history.history)
+        hasAlignedToLatestOnCurrentData = false
         chartView.dataPoints = points
+        updateChartWidth(for: points.count)
         buildStatsCards(from: points)
+    }
+
+    private func updateChartWidth(for pointCount: Int) {
+        let availableWidth = max(320, view.bounds.width - 32)
+        // Make timeline sparse enough to read; users can scroll horizontally.
+        let widthPerPoint: CGFloat = 12
+        let desiredWidth = max(availableWidth, CGFloat(max(pointCount, 2)) * widthPerPoint)
+        chartWidthConstraint?.constant = desiredWidth
+        view.layoutIfNeeded()
+
+        let maxOffsetX = max(0, chartScrollView.contentSize.width - chartScrollView.bounds.width)
+        if !hasAlignedToLatestOnCurrentData {
+            chartScrollView.setContentOffset(CGPoint(x: maxOffsetX, y: 0), animated: false)
+            hasAlignedToLatestOnCurrentData = true
+            return
+        }
+
+        if chartScrollView.contentOffset.x > maxOffsetX {
+            chartScrollView.setContentOffset(CGPoint(x: maxOffsetX, y: 0), animated: false)
+        }
     }
 
     private func buildStatsCards(from points: [PricePoint]) {
         statsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        guard !points.isEmpty else { return }
+        guard !points.isEmpty else {
+            let card = makeStatCard(title: "Low", value: "--")
+            let card2 = makeStatCard(title: "High", value: "--")
+            let card3 = makeStatCard(title: "Avg", value: "--")
+            statsStack.addArrangedSubview(card)
+            statsStack.addArrangedSubview(card2)
+            statsStack.addArrangedSubview(card3)
+            return
+        }
 
         let prices = points.map { $0.price }
         let low  = prices.min() ?? 0
@@ -249,24 +326,7 @@ final class PriceHistoryViewController: UIViewController {
     }
 
     private func filteredPoints(_ points: [PricePoint]) -> [PricePoint] {
-        let now = Date()
-        let cal = Calendar.current
-        switch currentRange {
-        case .sevenDays:
-            let cutoff = cal.date(byAdding: .day, value: -7, to: now)!
-            return points.filter { $0.date >= cutoff }
-        case .thirtyDays:
-            let cutoff = cal.date(byAdding: .day, value: -30, to: now)!
-            return points.filter { $0.date >= cutoff }
-        case .sixMonths:
-            let cutoff = cal.date(byAdding: .month, value: -6, to: now)!
-            return points.filter { $0.date >= cutoff }
-        case .oneYear:
-            let cutoff = cal.date(byAdding: .year, value: -1, to: now)!
-            return points.filter { $0.date >= cutoff }
-        case .all:
-            return points
-        }
+        points
     }
 
     private func updateRecommendationCard() {
