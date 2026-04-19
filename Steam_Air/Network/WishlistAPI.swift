@@ -42,8 +42,8 @@ struct AppDetailPriceOverview: Codable {
     let initial: Int
     let final: Int
     let discount_percent: Int
-    let initial_formatted: String
-    let final_formatted: String
+    let initial_formatted: String?
+    let final_formatted: String?
 
     func toWishlistPricing() -> (current: Double, original: Double?, discount: Int) {
         let current  = Double(final)   / 100.0
@@ -56,8 +56,8 @@ struct AppDetailPriceOverview: Codable {
 struct WishlistSubDTO: Codable {
     let id: Int?
     let discount_pct: Int?
-    let price: String?
-    let price_before_discount: Int? 
+    let price: FlexibleInt?
+    let price_before_discount: FlexibleInt?
 }
 
 struct WishlistItemDTO: Codable {
@@ -68,9 +68,9 @@ struct WishlistItemDTO: Codable {
     let priority: Int?
 
     func toWishlistItem(appid: Int) -> WishlistItem {
-        let sub        = subs?.first(where: { ($0.price ?? "0") != "0" }) ?? subs?.first
+        let sub = subs?.first(where: { ($0.price?.value ?? 0) > 0 }) ?? subs?.first
         let discountPct = sub?.discount_pct ?? 0
-        let priceInt   = Int(sub?.price ?? "0") ?? 0
+        let priceInt = sub?.price?.value ?? 0
 
         var currentPrice: Double?
         var originalPrice: Double?
@@ -78,7 +78,7 @@ struct WishlistItemDTO: Codable {
         if !is_free_game, priceInt > 0 {
             currentPrice = Double(priceInt) / 100.0
             if discountPct > 0 {
-                if let before = sub?.price_before_discount, before > 0 {
+                if let before = sub?.price_before_discount?.value, before > 0 {
                     originalPrice = Double(before) / 100.0
                 } else {
                     originalPrice = currentPrice! / (1.0 - Double(discountPct) / 100.0)
@@ -98,5 +98,28 @@ struct WishlistItemDTO: Codable {
             addedDate: added.map { Date(timeIntervalSince1970: TimeInterval($0)) },
             priority: priority ?? 0
         )
+    }
+}
+
+struct FlexibleInt: Codable {
+    let value: Int
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+
+        if let intValue = try? container.decode(Int.self) {
+            value = intValue
+            return
+        }
+        if let strValue = try? container.decode(String.self) {
+            value = Int(strValue) ?? 0
+            return
+        }
+        value = 0
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
     }
 }

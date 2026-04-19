@@ -89,7 +89,7 @@
         <scene sceneID="0sE-4Y-Eex">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="REa-6h-EcH" userLabel="Game Home Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Home" id="0Pu-FP-51q"/>
+                    <tabBarItem key="tabBarItem" title="Home" image="house" selectedImage="house.fill" catalog="system" id="0Pu-FP-51q"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="bE8-ZJ-6Kr">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -125,7 +125,7 @@
         <scene sceneID="STR-sc-nv1">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="STR-nc-v01" userLabel="Store Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Store" id="STR-ti-v01"/>
+                    <tabBarItem key="tabBarItem" title="Store" image="bag" selectedImage="bag.fill" catalog="system" id="STR-ti-v01"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="STR-nb-v01">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -161,7 +161,7 @@
         <scene sceneID="WSH-sc-nv1">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WSH-nc-v01" userLabel="Wishlist Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Wishlist" id="WSH-ti-v01"/>
+                    <tabBarItem key="tabBarItem" title="Wishlist" image="heart" selectedImage="heart.fill" catalog="system" id="WSH-ti-v01"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="WSH-nb-v01">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -197,7 +197,7 @@
         <scene sceneID="LIB-sc-nv1">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LIB-nc-v01" userLabel="Library Navigation Controller" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Library" id="LIB-ti-v01"/>
+                    <tabBarItem key="tabBarItem" title="Library" image="books.vertical" selectedImage="books.vertical.fill" catalog="system" id="LIB-ti-v01"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="LIB-nb-v01">
                         <rect key="frame" x="0.0" y="118" width="393" height="54"/>
@@ -214,7 +214,15 @@
         </scene>
     </scenes>
     <resources>
+        <image name="bag" catalog="system" width="128" height="121"/>
+        <image name="bag.fill" catalog="system" width="128" height="121"/>
+        <image name="books.vertical" catalog="system" width="128" height="105"/>
+        <image name="books.vertical.fill" catalog="system" width="128" height="105"/>
         <image name="ellipsis" catalog="system" width="128" height="37"/>
+        <image name="heart" catalog="system" width="128" height="119"/>
+        <image name="heart.fill" catalog="system" width="128" height="119"/>
+        <image name="house" catalog="system" width="128" height="109"/>
+        <image name="house.fill" catalog="system" width="128" height="109"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

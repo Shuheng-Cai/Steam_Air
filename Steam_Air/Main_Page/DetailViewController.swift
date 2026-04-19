@@ -83,10 +83,11 @@ class DetailViewController: UIViewController {
         config.cornerStyle = .large
         config.baseForegroundColor = .systemBlue
         config.baseBackgroundColor = .secondarySystemBackground
+        config.title = "Share This Game"
 
         let btn = UIButton(configuration: config)
         btn.translatesAutoresizingMaskIntoConstraints = false
-        btn.addTarget(self, action: #selector(wishlistButtonTapped(_:)), for: .touchUpInside)
+        btn.addTarget(self, action: #selector(shareGameTapped(_:)), for: .touchUpInside)
         return btn
     }()
 
@@ -107,7 +108,6 @@ class DetailViewController: UIViewController {
 
         setupLayout()
         bindData()
-        updateWishlistButton()
     }
 
     private func setupLayout() {
@@ -249,27 +249,19 @@ class DetailViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
     }
 
-    private func updateWishlistButton() {
-        guard let appid = Game?.appid else { return }
-        let inWishlist = LocalWishlistManager.shared.contains(appid)
+    @IBAction func shareGameTapped(_ sender: UIButton) {
+        guard let game = Game,
+              let url = URL(string: "https://store.steampowered.com/app/\(game.appid)") else { return }
 
-        var config = wishlistPrimaryButton.configuration ?? UIButton.Configuration.tinted()
-        config.title = inWishlist ? "Added to Wishlist" : "Add to Wishlist"
-        config.baseForegroundColor = inWishlist ? .systemBlue : .systemBlue
-        config.baseBackgroundColor = .secondarySystemBackground
-        config.cornerStyle = .large
-        wishlistPrimaryButton.configuration = config
-    }
+        let shareText = "Check out \(game.name) on Steam"
+        let activityVC = UIActivityViewController(activityItems: [shareText, url], applicationActivities: nil)
 
-    @IBAction func wishlistButtonTapped(_ sender: UIButton) {
-        guard let game = Game else { return }
-        let manager = LocalWishlistManager.shared
-        if manager.contains(game.appid) {
-            manager.remove(appid: game.appid)
-        } else {
-            manager.add(game: game)
+        if let popover = activityVC.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
         }
-        updateWishlistButton()
+
+        present(activityVC, animated: true)
     }
 
     @IBAction func viewOnSteamTapped(_ sender: UIButton) {

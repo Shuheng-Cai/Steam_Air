@@ -16,6 +16,40 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
     @IBOutlet weak var steamButton: UIButton!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var rememberMeButton: UIButton!
+    @IBOutlet weak var orLabel: UILabel!
+    
+    private lazy var featureIconsStack: UIStackView = {
+        let icons = ["house.fill", "books.vertical.fill", "bag.fill", "heart.fill"]
+            .map { symbolName -> UIView in
+                let container = UIView()
+                container.backgroundColor = UIColor.secondarySystemBackground
+                container.layer.cornerRadius = 22
+                container.translatesAutoresizingMaskIntoConstraints = false
+                container.widthAnchor.constraint(equalToConstant: 44).isActive = true
+                container.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
+                let imageView = UIImageView(image: UIImage(systemName: symbolName))
+                imageView.tintColor = .systemBlue
+                imageView.contentMode = .scaleAspectFit
+                imageView.translatesAutoresizingMaskIntoConstraints = false
+                container.addSubview(imageView)
+                NSLayoutConstraint.activate([
+                    imageView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+                    imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+                    imageView.widthAnchor.constraint(equalToConstant: 20),
+                    imageView.heightAnchor.constraint(equalToConstant: 20),
+                ])
+                return container
+            }
+
+        let stack = UIStackView(arrangedSubviews: icons)
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .equalSpacing
+        stack.spacing = 14
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
     
     
     @IBAction func rememberMeTapped(_ sender: UIButton) {
@@ -25,6 +59,11 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
     
     @IBAction func continueWithSteamTapped(_ sender: UIButton) {
         startSteamLogin()
+    }
+
+    @IBAction func signUpTapped(_ sender: UIButton) {
+        guard let url = URL(string: "https://store.steampowered.com/join/") else { return }
+        UIApplication.shared.open(url)
     }
     
     // variety
@@ -36,15 +75,17 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
         print("LoginViewController loaded")
         updateRememberMeButton()
         
-        // text field
-        emailTextField.placeholder = "Email address"
-        passwordTextField.placeholder = "Password"
-        passwordTextField.isSecureTextEntry = true
-        // button
-        loginButton.layer.cornerRadius = 22
-        loginButton.clipsToBounds = true
+        // Keep Steam-only login flow on this page.
+        emailTextField.isHidden = true
+        passwordTextField.isHidden = true
+        loginButton.isHidden = true
+        rememberMeButton.isHidden = true
+        orLabel.isHidden = true
+
         steamButton.layer.cornerRadius = 22
         steamButton.clipsToBounds = true
+
+        setupFeatureIconsStrip()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -110,6 +151,14 @@ class LoginViewController: UIViewController, ASWebAuthenticationPresentationCont
         authSession?.presentationContextProvider = self
         authSession?.prefersEphemeralWebBrowserSession = true
         authSession?.start()
+    }
+    
+    private func setupFeatureIconsStrip() {
+        view.addSubview(featureIconsStack)
+        NSLayoutConstraint.activate([
+            featureIconsStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            featureIconsStack.bottomAnchor.constraint(equalTo: steamButton.topAnchor, constant: -120),
+        ])
     }
     
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

@@ -36,8 +36,8 @@ class CustomTabBar: UITabBar {
             .foregroundColor: UIColor.systemBlue
         ]
 
-        appearance.stackedLayoutAppearance.normal.iconColor = .clear
-        appearance.stackedLayoutAppearance.selected.iconColor = .clear
+        appearance.stackedLayoutAppearance.normal.iconColor = .systemGray
+        appearance.stackedLayoutAppearance.selected.iconColor = .systemBlue
 
         self.standardAppearance = appearance
         self.scrollEdgeAppearance = appearance

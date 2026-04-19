@@ -18,23 +18,9 @@ final class WishlistViewController: UIViewController {
     private var isLoadingDeals = false
     var steamID: String?
 
-    /// Merged list: Steam wishlist + locally-added games (deduplicated by appid)
+    /// Steam-authored wishlist only (matches logged-in Steam account exactly)
     private var wishlistItems: [WishlistItem] {
-        let steamIDs = Set(steamWishlistItems.map { $0.appid })
-        let localItems = LocalWishlistManager.shared.localGames()
-            .filter { !steamIDs.contains($0.appid) }
-            .map { WishlistItem(
-                appid: $0.appid,
-                name: $0.name,
-                iconURL: $0.iconURL,
-                currentPrice: nil,
-                originalPrice: nil,
-                discountPercent: 0,
-                isFreeGame: false,
-                addedDate: nil,
-                priority: Int.max
-            )}
-        return steamWishlistItems + localItems
+        steamWishlistItems
     }
 
     private let segmentControl: UISegmentedControl = {
@@ -187,7 +173,7 @@ final class WishlistViewController: UIViewController {
         let isEmpty = currentTab == .wishlist ? wishlistItems.isEmpty : deals.isEmpty
         if isEmpty {
             emptyLabel.text = currentTab == .wishlist
-                ? "Your wishlist is empty.\nAdd games from the Library, or make your Steam wishlist Public."
+                ? "No Steam wishlist items found.\nPlease make sure this Steam account wishlist is Public."
                 : "No deals available right now."
         }
         emptyLabel.isHidden = !isEmpty
