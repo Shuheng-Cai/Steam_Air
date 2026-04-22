@@ -120,12 +120,6 @@ final class StoreViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         title = "Store"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "ellipsis"),
-            style: .plain,
-            target: nil,
-            action: nil
-        )
 
         setupLayout()
         setupSearchBar()

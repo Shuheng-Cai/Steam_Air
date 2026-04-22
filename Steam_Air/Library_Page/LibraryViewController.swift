@@ -99,13 +99,6 @@ final class LibraryViewController: UIViewController {
     private func setupNavigationBar() {
         title = "Library"
         navigationController?.navigationBar.prefersLargeTitles = false
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "ellipsis"),
-            style: .plain,
-            target: self,
-            action: #selector(moreTapped)
-        )
     }
 
     private func setupLayout() {

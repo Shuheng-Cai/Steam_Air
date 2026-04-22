@@ -49,12 +49,6 @@ class HomeViewController: UIViewController {
 
     private func configureNavigationBar() {
         title = "Home"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "ellipsis"),
-            style: .plain,
-            target: nil,
-            action: nil
-        )
     }
 
     private func setupTableView() {
